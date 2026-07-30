@@ -26,7 +26,6 @@
       --amber: #d9962b;
       --amber-soft: #f0c477;
       --jade: #3f9e6a;
-      --jade-ink: #1c6a43;
       --vermilion: #d6543a;
       --vermilion-ink: #a63a22;
 
@@ -47,7 +46,6 @@
       min-height: 100vh;
       padding: clamp(20px, 5vw, 64px) clamp(16px, 4vw, 40px) 72px;
       font-family: var(--mono);
-      font-weight: 400;
       font-size: 15px;
       line-height: 1.5;
       color: var(--paper);
@@ -60,7 +58,6 @@
       background-attachment: fixed;
     }
 
-    /* grain overlay */
     body::after {
       content: "";
       position: fixed;
@@ -72,12 +69,7 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    .shell {
-      position: relative;
-      z-index: 1;
-      max-width: 1140px;
-      margin: 0 auto;
-    }
+    .shell { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
 
     /* ---------- header ---------- */
 
@@ -120,24 +112,22 @@
     }
 
     .masthead-note {
-      max-width: 24ch;
+      max-width: 26ch;
       font-size: 12.5px;
       line-height: 1.6;
       color: var(--muted);
       text-align: right;
     }
 
-    /* ---------- layout ---------- */
-
     .layout {
       display: grid;
-      grid-template-columns: minmax(290px, 360px) minmax(0, 1fr);
-      gap: clamp(22px, 3.4vw, 46px);
+      grid-template-columns: minmax(290px, 350px) minmax(0, 1fr);
+      gap: clamp(22px, 3.2vw, 42px);
       align-items: start;
       margin-top: clamp(26px, 4vw, 48px);
     }
 
-    /* ---------- punch card (form) ---------- */
+    /* ---------- punch card ---------- */
 
     .card {
       position: relative;
@@ -153,9 +143,7 @@
     .card::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 15px;
       background-image: radial-gradient(circle at 8px 7px, var(--ink) 0 3.1px, transparent 3.6px);
       background-size: 23px 15px;
@@ -165,9 +153,7 @@
     .card::after {
       content: "";
       position: absolute;
-      left: 13px;
-      top: 26px;
-      bottom: 18px;
+      left: 13px; top: 26px; bottom: 18px;
       width: 1px;
       background: repeating-linear-gradient(to bottom, var(--vermilion) 0 4px, transparent 4px 9px);
       opacity: .3;
@@ -190,12 +176,7 @@
       font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
     }
 
-    .card-serial {
-      font-size: 10.5px;
-      letter-spacing: .18em;
-      color: var(--graphite);
-      opacity: .7;
-    }
+    .card-serial { font-size: 10.5px; letter-spacing: .18em; color: var(--graphite); opacity: .7; }
 
     .field { margin-bottom: 20px; }
 
@@ -209,14 +190,10 @@
       color: var(--graphite);
     }
 
-    .control {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
+    .control { position: relative; display: flex; align-items: center; }
 
-    input,
-    select {
+    .card input,
+    .card select {
       width: 100%;
       padding: 9px 2px;
       font-family: var(--mono);
@@ -230,21 +207,18 @@
       transition: border-color .2s ease, background-color .2s ease;
     }
 
-    input::placeholder { color: #a99c8b; font-weight: 400; }
+    .card input::placeholder { color: #a99c8b; font-weight: 400; }
 
-    input:focus,
-    select:focus {
+    .card input:focus,
+    .card select:focus {
       outline: none;
       border-bottom-color: var(--amber);
       background: rgba(217, 150, 43, .09);
     }
 
-    input:focus-visible,
-    select:focus-visible { outline: none; }
-
     #token { padding-right: 46px; letter-spacing: .05em; }
 
-    select {
+    .card select {
       appearance: none;
       padding-right: 26px;
       cursor: pointer;
@@ -253,8 +227,7 @@
       background-position: right 4px center;
     }
 
-    /* keep the arrow visible when :focus paints a background */
-    select:focus {
+    .card select:focus {
       background-image:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%234a4137' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"),
         linear-gradient(rgba(217, 150, 43, .09), rgba(217, 150, 43, .09));
@@ -271,18 +244,13 @@
       color: var(--graphite);
       background: none;
       border: 0;
-      border-bottom: 1.5px solid transparent;
       cursor: pointer;
       transition: color .18s ease;
     }
 
     .peek:hover { color: var(--vermilion-ink); }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
     .hint {
       display: flex;
@@ -320,13 +288,8 @@
       box-shadow: 6px 6px 0 rgba(20, 17, 15, .26);
     }
 
-    .stamp:active:not(:disabled) {
-      transform: translate(3px, 3px);
-      box-shadow: 0 0 0 rgba(20, 17, 15, .2);
-    }
-
+    .stamp:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: none; }
     .stamp:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
-
     .stamp:disabled { cursor: progress; opacity: .55; }
 
     /* ---------- results ---------- */
@@ -339,7 +302,6 @@
       background: linear-gradient(170deg, rgba(243, 237, 226, .055), rgba(243, 237, 226, .02));
       border: 1px solid rgba(243, 237, 226, .13);
       border-radius: 4px;
-      backdrop-filter: blur(2px);
     }
 
     .panel + .panel { margin-top: 18px; }
@@ -362,19 +324,64 @@
       font-variation-settings: "SOFT" 40, "WONK" 1, "opsz" 144;
     }
 
-    .placeholder p {
-      max-width: 34ch;
-      margin: 0;
-      font-size: 13px;
+    .placeholder p { max-width: 34ch; margin: 0; font-size: 13px; color: var(--muted); }
+    .loading .placeholder-mark { color: var(--amber); animation: tick 1.1s steps(1) infinite; }
+
+    /* identity */
+
+    .who {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px dotted rgba(243, 237, 226, .18);
+    }
+
+    .who-photo {
+      position: relative;
+      flex: 0 0 auto;
+      width: 54px;
+      height: 54px;
+      transform: rotate(-2deg);
+    }
+
+    .who-photo img,
+    .who-photo .initials {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+      background: var(--ink-3);
+      box-shadow: 0 0 0 1px rgba(243, 237, 226, .3), 0 8px 18px -8px rgba(0, 0, 0, .9);
+    }
+
+    .who-photo .initials {
+      display: grid;
+      place-items: center;
+      font-family: var(--display);
+      font-size: 1.25rem;
+      color: var(--amber-soft);
+      font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
+    }
+
+    .who-name {
+      font-family: var(--display);
+      font-size: 1.24rem;
+      font-weight: 500;
+      line-height: 1.15;
+      font-variation-settings: "SOFT" 18, "WONK" 1, "opsz" 60;
+    }
+
+    .who-meta {
+      margin-top: 4px;
+      font-size: 11.5px;
+      letter-spacing: .06em;
       color: var(--muted);
     }
 
-    .loading .placeholder-mark {
-      color: var(--amber);
-      animation: tick 1.1s steps(1) infinite;
-    }
-
-    /* hero */
+    .who-spacer { flex: 1 1 auto; }
 
     .hero-top {
       display: flex;
@@ -382,7 +389,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .range {
@@ -405,12 +412,7 @@
       transform: rotate(-1.4deg);
     }
 
-    .verdict {
-      display: flex;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 6px 16px;
-    }
+    .verdict { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; }
 
     .verdict-word {
       font-family: var(--display);
@@ -431,25 +433,13 @@
       font-variation-settings: "SOFT" 12, "WONK" 1, "opsz" 144;
     }
 
-    .verdict-value small {
-      font-size: .34em;
-      font-weight: 400;
-      letter-spacing: .06em;
-      color: var(--muted);
-    }
-
-    .is-surplus .verdict-value,
-    .is-surplus .verdict-word { color: var(--jade); }
-
-    .is-deficit .verdict-value,
-    .is-deficit .verdict-word { color: var(--vermilion); }
-
-    /* balance meter */
+    .is-surplus .verdict-value, .is-surplus .verdict-word { color: var(--jade); }
+    .is-deficit .verdict-value, .is-deficit .verdict-word { color: var(--vermilion); }
 
     .meter {
       position: relative;
       height: 12px;
-      margin-top: 26px;
+      margin-top: 24px;
       background: rgba(243, 237, 226, .08);
       border-radius: 2px;
       overflow: hidden;
@@ -459,11 +449,7 @@
       height: 100%;
       width: 0;
       border-radius: 2px;
-      background-image: repeating-linear-gradient(
-        115deg,
-        currentColor 0 6px,
-        rgba(20, 17, 15, .28) 6px 9px
-      );
+      background-image: repeating-linear-gradient(115deg, currentColor 0 6px, rgba(20, 17, 15, .28) 6px 9px);
       transition: width .9s cubic-bezier(.2, .8, .2, 1);
     }
 
@@ -472,8 +458,7 @@
 
     .meter-mark {
       position: absolute;
-      top: -5px;
-      bottom: -5px;
+      top: -5px; bottom: -5px;
       width: 2px;
       background: var(--paper);
       box-shadow: 0 0 0 1px rgba(20, 17, 15, .5);
@@ -488,23 +473,18 @@
       color: var(--muted);
     }
 
-    /* stat tiles */
-
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
       gap: 1px;
-      margin-top: 28px;
+      margin-top: 26px;
       background: rgba(243, 237, 226, .13);
       border: 1px solid rgba(243, 237, 226, .13);
       border-radius: 3px;
       overflow: hidden;
     }
 
-    .stat {
-      padding: 15px 16px;
-      background: var(--ink-2);
-    }
+    .stat { padding: 15px 16px; background: var(--ink-2); }
 
     .stat dt {
       margin: 0 0 8px;
@@ -520,8 +500,27 @@
       font-size: 17px;
       font-weight: 500;
       font-variant-numeric: tabular-nums;
-      letter-spacing: -.01em;
     }
+
+    .stat dd small { font-size: 11px; font-weight: 400; color: var(--muted); }
+
+    /* alert strip cho ngày cần phiếu */
+
+    .alert {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 14px 16px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      background: rgba(214, 84, 58, .1);
+      border: 1px solid rgba(214, 84, 58, .32);
+      border-left: 3px solid var(--vermilion);
+      border-radius: 2px;
+    }
+
+    .alert::before { content: "⚑"; color: var(--vermilion); }
+    .alert b { color: var(--paper); font-weight: 600; }
 
     /* ledger */
 
@@ -540,20 +539,11 @@
       font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
     }
 
-    .count {
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .count { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 
     .table-wrap { overflow-x: auto; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-variant-numeric: tabular-nums;
-    }
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 
     thead th {
       padding: 0 12px 9px 0;
@@ -569,43 +559,32 @@
 
     thead th.num, tbody td.num { text-align: right; padding-right: 0; }
 
-    tbody tr {
-      border-bottom: 1px dotted rgba(243, 237, 226, .11);
+    tbody tr { border-bottom: 1px dotted rgba(243, 237, 226, .11); }
+
+    .animate tbody tr {
       animation: rise .5s cubic-bezier(.2, .8, .2, 1) both;
       animation-delay: calc(var(--i) * 26ms);
     }
 
     tbody tr:nth-child(even) { background: rgba(243, 237, 226, .022); }
     tbody tr:hover { background: rgba(217, 150, 43, .07); }
+    tbody tr.kind-missing_punch { background: rgba(214, 84, 58, .07); }
+    tbody tr.kind-half_leave { background: rgba(217, 150, 43, .05); }
 
-    tbody td {
-      padding: 11px 12px 11px 0;
-      font-size: 13.5px;
-      white-space: nowrap;
-    }
+    tbody td { padding: 10px 12px 10px 0; font-size: 13.5px; white-space: nowrap; }
 
     .day { font-weight: 500; }
 
-    .dow {
-      margin-left: 7px;
-      font-size: 10.5px;
-      letter-spacing: .1em;
-      color: var(--muted);
-    }
-
+    .dow { margin-left: 7px; font-size: 10.5px; letter-spacing: .1em; color: var(--muted); }
     .is-weekend .dow { color: var(--amber); }
 
     .clock { color: var(--muted); font-size: 12.5px; }
     .clock b { font-weight: 500; color: var(--paper); }
+    .clock.est { font-style: italic; }
 
-    .bar-cell { width: 34%; min-width: 110px; padding-right: 14px !important; }
+    .bar-cell { width: 26%; min-width: 100px; padding-right: 14px !important; }
 
-    .bar {
-      position: relative;
-      height: 7px;
-      background: rgba(243, 237, 226, .075);
-      border-radius: 1px;
-    }
+    .bar { position: relative; height: 7px; background: rgba(243, 237, 226, .075); border-radius: 1px; }
 
     .bar i {
       position: absolute;
@@ -614,25 +593,55 @@
       border-radius: 1px;
       background: currentColor;
       transition: width .8s cubic-bezier(.2, .8, .2, 1);
-      transition-delay: calc(var(--i) * 26ms + 120ms);
     }
 
-    .bar u {
-      position: absolute;
-      top: -3px;
-      bottom: -3px;
-      width: 1px;
-      background: rgba(243, 237, 226, .5);
-    }
+    .bar u { position: absolute; top: -3px; bottom: -3px; width: 1px; background: rgba(243, 237, 226, .55); }
 
     tr.over .bar { color: var(--jade); }
     tr.under .bar { color: var(--vermilion); }
+    tr.flat .bar { color: var(--muted); }
 
     .delta { font-weight: 500; }
     tr.over .delta { color: var(--jade); }
     tr.under .delta { color: var(--vermilion); }
+    tr.flat .delta { color: var(--muted); }
 
-    /* footer strip */
+    /* dropdown loại ngày */
+
+    .kind-cell { padding-right: 0 !important; }
+
+    .kind-pick {
+      appearance: none;
+      max-width: 148px;
+      padding: 4px 18px 4px 8px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background-color: transparent;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1.3 5 5.3l4-4' fill='none' stroke='%238c8073' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 5px center;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+    }
+
+    .kind-pick:hover { color: var(--paper); border-color: rgba(243, 237, 226, .24); }
+    .kind-pick:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+    .kind-pick option { color: var(--ink); background: var(--paper); }
+
+    tr.kind-half_leave .kind-pick { color: var(--amber); border-color: rgba(217, 150, 43, .4); }
+    tr.kind-missing_punch .kind-pick { color: var(--vermilion); border-color: rgba(214, 84, 58, .4); }
+
+    .kind-pick.edited { box-shadow: 0 0 0 1px var(--amber-soft) inset; }
+
+    .edited-dot { margin-left: 5px; color: var(--amber-soft); }
+
+    /* footer */
 
     .strip {
       display: flex;
@@ -644,6 +653,8 @@
       font-size: 11.5px;
       color: var(--muted);
     }
+
+    .strip-actions { display: flex; gap: 8px; }
 
     .ghost {
       padding: 8px 13px;
@@ -662,6 +673,7 @@
 
     .ghost:hover { color: var(--amber); border-color: var(--amber); background: rgba(217, 150, 43, .08); }
     .ghost:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+    .ghost[hidden] { display: none; }
 
     details { margin-top: 16px; }
 
@@ -689,12 +701,7 @@
       border-radius: 3px;
     }
 
-    /* error */
-
-    .error {
-      border-color: rgba(214, 84, 58, .45);
-      border-left: 3px solid var(--vermilion);
-    }
+    .error { border-color: rgba(214, 84, 58, .45); border-left: 3px solid var(--vermilion); }
 
     .error-title {
       display: flex;
@@ -708,30 +715,22 @@
       font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
     }
 
-    .error-body { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--paper); }
+    .error-body { margin: 0; font-size: 13.5px; line-height: 1.6; }
 
-    /* skeleton */
-
-    .skeleton { display: grid; gap: 10px; margin-top: 4px; }
+    .skeleton { display: grid; gap: 10px; }
 
     .skeleton i {
       display: block;
       height: 13px;
       border-radius: 2px;
-      background: linear-gradient(
-        90deg,
-        rgba(243, 237, 226, .05) 0%,
-        rgba(243, 237, 226, .14) 48%,
-        rgba(243, 237, 226, .05) 100%
-      );
+      background: linear-gradient(90deg, rgba(243, 237, 226, .05) 0%, rgba(243, 237, 226, .14) 48%, rgba(243, 237, 226, .05) 100%);
       background-size: 220% 100%;
       animation: sweep 1.3s linear infinite;
     }
 
     .toast {
       position: fixed;
-      left: 50%;
-      bottom: 26px;
+      left: 50%; bottom: 26px;
       z-index: 20;
       padding: 11px 18px;
       font-size: 11px;
@@ -750,42 +749,19 @@
 
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
 
-    .sr {
-      position: absolute;
-      width: 1px; height: 1px;
-      margin: -1px; padding: 0;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-      border: 0;
-    }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes tick { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .25; } }
+    @keyframes sweep { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes tick {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: .25; }
-    }
-
-    @keyframes sweep {
-      from { background-position: 120% 0; }
-      to { background-position: -120% 0; }
-    }
-
-    @media (max-width: 900px) {
+    @media (max-width: 940px) {
       .layout { grid-template-columns: 1fr; }
       .card { transform: none; }
       .masthead-note { text-align: left; max-width: 46ch; }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 620px) {
       body { font-size: 14px; }
-      .bar-cell, thead th.bar-col { display: none; }
-      .clock { display: none; }
-      thead th.clock-col { display: none; }
+      .bar-cell, thead th.bar-col, .clock, thead th.clock-col { display: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -801,11 +777,11 @@
   <div class="shell">
     <header class="masthead">
       <div>
-        <p class="eyebrow">Hasaki <span>/</span> Bảng công <span>/</span> 9 giờ mỗi ngày</p>
+        <p class="eyebrow">Hasaki <span>/</span> Bảng công <span>/</span> Định mức theo lịch ca</p>
         <h1>Thẻ chấm <em>công</em></h1>
       </div>
       <p class="masthead-note">
-        Đối chiếu giờ check-in / check-out với định mức 9 giờ, tính phần dư và phần thiếu của cả tháng.
+        Đối chiếu check-in / check-out với lịch ca, tách riêng ngày phép 1 buổi và ngày quên điểm danh.
       </p>
     </header>
 
@@ -870,10 +846,27 @@
     const toast = document.getElementById("toast");
 
     const DOW = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-    const now = new Date();
 
-    let lastOutput = "";
+    const KIND = {
+      full: { label: "Ngày thường", pick: "Ngày thường" },
+      half_leave: { label: "Phép 1 buổi", pick: "Phép 1 buổi" },
+      missing_punch: { label: "Quên điểm danh", pick: "Có phiếu quên ĐD" },
+    };
+
+    const SESSION = { morning: "nghỉ sáng", afternoon: "nghỉ chiều" };
+
+    const MISSING = {
+      in: "thiếu giờ vào",
+      out: "thiếu giờ ra",
+      both: "thiếu cả hai đầu",
+      invalid: "giờ ra không sau giờ vào",
+    };
+
+    const state = { days: [], summary: null, kinds: new Map(), animate: true };
+
     let toastTimer;
+
+    const now = new Date();
 
     for (let month = 1; month <= 12; month++) {
       const option = document.createElement("option");
@@ -906,26 +899,20 @@
 
     const longForm = (seconds) => {
       const total = Math.abs(Math.trunc(seconds));
-      const hours = Math.floor(total / 3600);
-      const minutes = Math.floor((total % 3600) / 60);
-      return `${hours} giờ ${pad2(minutes)} phút`;
+      return `${Math.floor(total / 3600)} giờ ${pad2(Math.floor((total % 3600) / 60))} phút`;
     };
 
     const signed = (seconds, formatter = compact) =>
       `${seconds < 0 ? "−" : "+"}${formatter(seconds)}`;
 
-    // check_in/check_out có thể là epoch giây hoặc giây tính từ nửa đêm.
+    // check_in/check_out là epoch giây; vẫn đỡ trường hợp API đổi sang giây-từ-nửa-đêm.
     const clockOf = (value) => {
-      if (!Number.isFinite(value)) return null;
+      if (!Number.isFinite(value) || value == null) return null;
 
       if (value > 1e9) {
-        const parts = new Intl.DateTimeFormat("vi-VN", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-          timeZone: "Asia/Ho_Chi_Minh",
+        return new Intl.DateTimeFormat("vi-VN", {
+          hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh",
         }).format(new Date(value * 1000));
-        return parts;
       }
 
       if (value >= 0 && value < 172800) {
@@ -942,33 +929,94 @@
       const [, year, month, day] = match;
       const index = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))).getUTCDay();
 
-      return {
-        label: `${day}/${month}`,
-        dow: DOW[index],
-        weekend: index === 0 || index === 6,
-      };
+      return { label: `${day}/${month}`, dow: DOW[index], weekend: index === 0 || index === 6 };
     };
 
-    const countUp = (element, seconds, formatter) => {
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const render = (value) => {
-        element.textContent = signed(value, formatter);
-      };
+    // Ba nhánh này phải khớp resolveDay() ở server.js.
+    const resolveDay = (day, kind) => {
+      if (kind === "missing_punch") {
+        return { worked: day.span_seconds, target: day.span_seconds, diff: 0 };
+      }
 
-      if (reduced) return render(seconds);
+      const target =
+        kind === "half_leave" ? day.span_seconds - day.half_seconds : day.span_seconds;
 
-      const duration = 720;
-      const start = performance.now();
+      return { worked: day.punched_seconds, target, diff: day.punched_seconds - target };
+    };
 
-      const frame = (stamp) => {
-        const progress = Math.min((stamp - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        render(seconds * eased);
-        if (progress < 1) requestAnimationFrame(frame);
-        else render(seconds);
-      };
+    const kindOf = (day) => state.kinds.get(day.date) ?? day.kind;
 
-      requestAnimationFrame(frame);
+    const totals = () => {
+      const counts = { full: 0, half_leave: 0, missing_punch: 0 };
+      let worked = 0;
+      let target = 0;
+      let edited = 0;
+
+      for (const day of state.days) {
+        const kind = kindOf(day);
+        const resolved = resolveDay(day, kind);
+
+        counts[kind]++;
+        worked += resolved.worked;
+        target += resolved.target;
+        if (kind !== day.kind) edited++;
+      }
+
+      return { counts, worked, target, diff: worked - target, edited };
+    };
+
+    const buildText = () => {
+      const sum = totals();
+      const lines = ["=== CHI TIẾT CHẤM CÔNG HẰNG NGÀY ==="];
+
+      for (const day of state.days) {
+        const kind = kindOf(day);
+        const { worked, target, diff } = resolveDay(day, kind);
+        const mark = kind !== day.kind ? " *sửa tay*" : "";
+
+        if (kind === "missing_punch") {
+          lines.push(
+            `[${day.date}] Quên điểm danh (${MISSING[day.missing] || "thiếu dữ liệu"})` +
+            ` | Tính đủ định mức: ${compact(target)} | Chênh lệch: 0h 00m${mark}`
+          );
+          continue;
+        }
+
+        const tag = kind === "half_leave" ? `Phép 1 buổi (${SESSION[day.session] || "-"}) | ` : "";
+
+        lines.push(
+          `[${day.date}] ${tag}Làm: ${compact(worked)} | Định mức: ${compact(target)}` +
+          ` | Chênh lệch: ${signed(diff)} (${diff >= 0 ? "Dư" : "Thiếu"})${mark}`
+        );
+      }
+
+      const missing = state.days.filter((day) => kindOf(day) === "missing_punch").map((day) => day.date);
+
+      lines.push(
+        "",
+        "================ KẾT QUẢ TỔNG HỢP ================",
+        `• Số ngày tính toán: ${state.days.length} ngày`,
+        `• Trong đó: ${sum.counts.full} ngày thường, ${sum.counts.half_leave} ngày phép 1 buổi, ${sum.counts.missing_punch} ngày quên điểm danh`,
+        `• Tổng giờ chuẩn: ${longForm(sum.target)}`,
+        `• Tổng giờ thực tế làm: ${longForm(sum.worked)}`
+      );
+
+      if (missing.length) {
+        lines.push(
+          "",
+          `⚑ CẦN LÀM PHIẾU QUÊN ĐIỂM DANH: ${missing.join(", ")}`,
+          "  (đang tính đủ định mức, nếu phiếu không được duyệt thì số liệu sẽ lệch)"
+        );
+      }
+
+      lines.push(
+        "",
+        sum.diff >= 0
+          ? `=> KẾT QUẢ: Bạn đang DƯ ${longForm(sum.diff)} 🎉`
+          : `=> KẾT QUẢ: Bạn đang THIẾU ${longForm(Math.abs(sum.diff))} ⚠️`
+      );
+
+      return lines.join("\n");
     };
 
     const showToast = (message) => {
@@ -976,6 +1024,29 @@
       toast.classList.add("show");
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    };
+
+    const initialsOf = (name) =>
+      String(name || "?")
+        .trim()
+        .split(/\s+/)
+        .slice(-2)
+        .map((part) => part[0] || "")
+        .join("")
+        .toUpperCase() || "?";
+
+    const renderPhoto = (summary) => {
+      const initials = `<span class="initials">${escapeHtml(initialsOf(summary.staff_name))}</span>`;
+
+      if (!summary.staff_avatar) return initials;
+
+      return `<img
+        src="${escapeHtml(summary.staff_avatar)}"
+        alt="Ảnh ${escapeHtml(summary.staff_name || "nhân viên")}"
+        referrerpolicy="no-referrer"
+        loading="lazy"
+        onerror="this.outerHTML = ${escapeHtml(JSON.stringify(initials))}"
+      />`;
     };
 
     const renderLoading = () => {
@@ -998,90 +1069,130 @@
         </div>`;
     };
 
-    const renderEmpty = (summary) => {
-      results.innerHTML = `
-        <div class="panel placeholder">
-          <div class="placeholder-mark">∅</div>
-          <p>Không có ngày nào đủ cả check-in và check-out trong khoảng
-          ${escapeHtml(summary.from_date)} → ${escapeHtml(summary.to_date)}.</p>
-        </div>`;
-    };
+    const render = () => {
+      const summary = state.summary || {};
+      const days = state.days;
 
-    const renderResult = (data) => {
-      const summary = data.summary || {};
-      const days = Array.isArray(data.days) ? data.days : [];
+      if (!days.length) {
+        results.innerHTML = `
+          <div class="panel placeholder">
+            <div class="placeholder-mark">∅</div>
+            <p>Không có ngày chấm công nào trong khoảng
+            ${escapeHtml(summary.from_date || "")} → ${escapeHtml(summary.to_date || "")}.</p>
+          </div>`;
+        return;
+      }
 
-      if (!days.length) return renderEmpty(summary);
-
-      const target = Number(summary.target_seconds_per_day) || 9 * 3600;
-      const diff = Number(summary.difference_seconds) || 0;
-      const worked = Number(summary.total_worked_seconds) || 0;
-      const totalTarget = Number(summary.total_target_seconds) || 0;
-      const surplus = diff >= 0;
-
-      const scale = Math.max(target * 1.45, ...days.map((day) => day.worked_seconds || 0));
-      const markPercent = (target / scale) * 100;
-      const meterPercent = Math.max(2, Math.min(100, (worked / (totalTarget || worked || 1)) * 100));
-      const average = worked / days.length;
+      const sum = totals();
+      const surplus = sum.diff >= 0;
+      const spanScale = Math.max(...days.map((day) => day.span_seconds * 1.45), ...days.map((day) => day.punched_seconds || 0));
+      const missingDates = days.filter((day) => kindOf(day) === "missing_punch").map((day) => day.date);
+      const meterPercent = Math.max(2, Math.min(100, (sum.worked / (sum.target || sum.worked || 1)) * 100));
+      const markPercent = Math.min(100, (sum.target / Math.max(sum.worked, sum.target, 1)) * 100);
 
       const rows = days.map((day, index) => {
+        const kind = kindOf(day);
+        const { worked, target, diff } = resolveDay(day, kind);
         const { label, dow, weekend } = dayLabel(day.date);
-        const dayDiff = Number(day.diff_seconds) || 0;
-        const dayWorked = Number(day.worked_seconds) || 0;
-        const from = clockOf(Number(day.check_in));
-        const to = clockOf(Number(day.check_out));
+        const edited = kind !== day.kind;
+
+        const from = clockOf(day.check_in);
+        const to = clockOf(day.check_out);
+        const scheduleFrom = clockOf(day.schedule_in);
+        const scheduleTo = clockOf(day.schedule_out);
+
+        const tone = diff > 0 ? "over" : diff < 0 ? "under" : "flat";
+
+        const tips = [
+          scheduleFrom && scheduleTo ? `Lịch ca ${day.shift || ""} ${scheduleFrom}–${scheduleTo}`.trim() : null,
+          day.late_by ? `Vào trễ ${compact(day.late_by)}` : null,
+          day.early_by ? `Ra sớm ${compact(day.early_by)}` : null,
+          day.left_early_flag ? "HR đánh dấu về sớm (status & 128)" : null,
+          day.kind === "missing_punch" ? `Máy chấm công ${MISSING[day.missing] || "thiếu dữ liệu"}` : null,
+        ].filter(Boolean).join(" · ");
+
+        const clockText = kind === "missing_punch"
+          ? `<span class="clock est">${scheduleFrom && scheduleTo ? `${scheduleFrom} → ${scheduleTo}` : "—"} (lịch ca)</span>`
+          : from && to
+            ? `<b>${from}</b> → <b>${to}</b>`
+            : "—";
+
+        const options = Object.entries(KIND).map(([value, meta]) =>
+          `<option value="${value}"${value === kind ? " selected" : ""}>${escapeHtml(meta.pick)}</option>`
+        ).join("");
 
         return `
-          <tr class="${dayDiff >= 0 ? "over" : "under"} ${weekend ? "is-weekend" : ""}" style="--i:${index}">
+          <tr class="${tone} kind-${kind} ${weekend ? "is-weekend" : ""}" style="--i:${index}">
             <td class="day">${escapeHtml(label)}<span class="dow">${escapeHtml(dow)}</span></td>
-            <td class="clock">${
-              from && to ? `<b>${from}</b> → <b>${to}</b>` : "—"
-            }</td>
-            <td class="num">${compact(dayWorked)}</td>
+            <td class="clock" title="${escapeHtml(tips)}">${clockText}</td>
+            <td class="num">${compact(worked)}</td>
             <td class="bar-cell">
-              <div class="bar">
-                <i style="--i:${index}" data-width="${Math.min(100, (dayWorked / scale) * 100)}"></i>
-                <u style="left:${markPercent}%"></u>
+              <div class="bar" title="Định mức ${compact(target)}">
+                <i data-width="${Math.min(100, (worked / spanScale) * 100)}"></i>
+                <u style="left:${Math.min(100, (target / spanScale) * 100)}%"></u>
               </div>
             </td>
-            <td class="num delta">${signed(dayDiff)}</td>
+            <td class="num delta">${diff === 0 ? "0h 00m" : signed(diff)}</td>
+            <td class="kind-cell">
+              <select class="kind-pick${edited ? " edited" : ""}" data-date="${escapeHtml(day.date)}"
+                aria-label="Loại ngày ${escapeHtml(label)}"
+                title="${edited ? `Tự nhận diện: ${KIND[day.kind].label}` : "Tự nhận diện từ lịch ca"}">
+                ${options}
+              </select>${edited ? '<span class="edited-dot" title="Đã sửa tay">•</span>' : ""}
+            </td>
           </tr>`;
       }).join("");
 
       results.innerHTML = `
         <div class="panel ${surplus ? "is-surplus" : "is-deficit"}">
+          <div class="who">
+            <div class="who-photo">${renderPhoto(summary)}</div>
+            <div>
+              <div class="who-name">${escapeHtml(summary.staff_name || "Không rõ tên")}</div>
+              <div class="who-meta">${escapeHtml(summary.staff_email || "")}</div>
+            </div>
+            <div class="who-spacer"></div>
+            ${summary.staff_code ? `<span class="chip">Mã NV ${escapeHtml(summary.staff_code)}</span>` : ""}
+          </div>
+
           <div class="hero-top">
             <span class="range">${escapeHtml(summary.from_date || "")} → ${escapeHtml(summary.to_date || "")}</span>
-            ${summary.staff_code ? `<span class="chip">Mã NV ${escapeHtml(summary.staff_code)}</span>` : ""}
+            ${sum.edited ? `<span class="count">${sum.edited} ngày sửa tay</span>` : ""}
           </div>
 
           <div class="verdict">
             <span class="verdict-word">${surplus ? "Đang dư" : "Đang thiếu"}</span>
-            <span class="verdict-value" id="hero">${signed(diff, longForm)}</span>
-            <small class="verdict-value" style="font-size:.34em">${surplus ? "🎉" : "⚠️"}</small>
+            <span class="verdict-value">${signed(sum.diff, longForm)}</span>
           </div>
 
           <div class="meter">
             <div class="meter-fill" id="meter"></div>
-            <span class="meter-mark" style="left:${Math.min(100, (totalTarget / Math.max(worked, totalTarget, 1)) * 100)}%"></span>
+            <span class="meter-mark" style="left:${markPercent}%"></span>
           </div>
           <div class="meter-legend">
-            <span>Thực tế ${longForm(worked)}</span>
-            <span>Chuẩn ${longForm(totalTarget)}</span>
+            <span>Thực tế ${longForm(sum.worked)}</span>
+            <span>Chuẩn ${longForm(sum.target)}</span>
           </div>
 
           <dl class="stats">
             <div class="stat"><dt>Ngày tính</dt><dd>${days.length}</dd></div>
-            <div class="stat"><dt>Giờ chuẩn</dt><dd>${compact(totalTarget)}</dd></div>
-            <div class="stat"><dt>Thực tế</dt><dd>${compact(worked)}</dd></div>
-            <div class="stat"><dt>TB / ngày</dt><dd>${compact(average)}</dd></div>
+            <div class="stat"><dt>Ngày thường</dt><dd>${sum.counts.full}</dd></div>
+            <div class="stat"><dt>Phép 1 buổi</dt><dd>${sum.counts.half_leave} <small>× ${compact(days[0].half_seconds)}</small></dd></div>
+            <div class="stat"><dt>Quên điểm danh</dt><dd>${sum.counts.missing_punch}</dd></div>
+            <div class="stat"><dt>TB / ngày</dt><dd>${compact(sum.worked / days.length)}</dd></div>
           </dl>
+
+          ${missingDates.length ? `
+            <p class="alert">
+              <span><b>${missingDates.length} ngày quên điểm danh:</b> ${escapeHtml(missingDates.join(", "))}.
+              Đang tính đủ định mức (chênh lệch 0) như đã có phiếu được duyệt — nhớ làm phiếu, nếu không số liệu sẽ lệch.</span>
+            </p>` : ""}
         </div>
 
         <div class="panel">
           <div class="panel-head">
             <span class="panel-title">Sổ chi tiết</span>
-            <span class="count">${days.length} ngày · định mức ${compact(target)}</span>
+            <span class="count">${days.length} ngày · định mức theo lịch ca</span>
           </div>
 
           <div class="table-wrap">
@@ -1091,8 +1202,9 @@
                   <th scope="col">Ngày</th>
                   <th scope="col" class="clock-col">Vào → Ra</th>
                   <th scope="col" class="num">Làm</th>
-                  <th scope="col" class="bar-col">So với ${compact(target)}</th>
+                  <th scope="col" class="bar-col">So với định mức</th>
                   <th scope="col" class="num">Chênh</th>
+                  <th scope="col">Loại ngày</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
@@ -1100,18 +1212,23 @@
           </div>
 
           <div class="strip">
-            <span>Cột mốc trắng trên thanh là định mức ${compact(target)} mỗi ngày.</span>
-            <button class="ghost" id="copy" type="button">Copy bản text</button>
+            <span>Vạch trắng trên thanh là định mức của ngày đó. Đổi cột "Loại ngày" để tính lại ngay.</span>
+            <span class="strip-actions">
+              <button class="ghost" id="reset" type="button" ${sum.edited ? "" : "hidden"}>Bỏ sửa tay</button>
+              <button class="ghost" id="copy" type="button">Copy bản text</button>
+            </span>
           </div>
 
           <details>
-            <summary>Xem bản text gốc</summary>
-            <pre>${escapeHtml(data.output || "")}</pre>
+            <summary>Xem bản text</summary>
+            <pre>${escapeHtml(buildText())}</pre>
           </details>
         </div>`;
 
-      const hero = document.getElementById("hero");
-      if (hero) countUp(hero, diff, longForm);
+      if (state.animate) {
+        results.querySelector(".table-wrap table")?.classList.add("animate");
+        results.firstElementChild?.classList.add("animate");
+      }
 
       requestAnimationFrame(() => {
         const meter = document.getElementById("meter");
@@ -1122,17 +1239,35 @@
         });
       });
 
-      const copyButton = document.getElementById("copy");
-      if (copyButton) {
-        copyButton.addEventListener("click", async () => {
-          try {
-            await navigator.clipboard.writeText(lastOutput);
-            showToast("Đã copy");
-          } catch {
-            showToast("Trình duyệt chặn clipboard");
-          }
+      results.querySelectorAll(".kind-pick").forEach((select) => {
+        select.addEventListener("change", (event) => {
+          const date = event.target.dataset.date;
+          const day = state.days.find((item) => item.date === date);
+          if (!day) return;
+
+          if (event.target.value === day.kind) state.kinds.delete(date);
+          else state.kinds.set(date, event.target.value);
+
+          state.animate = false;
+          render();
         });
-      }
+      });
+
+      document.getElementById("copy")?.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(buildText());
+          showToast("Đã copy");
+        } catch {
+          showToast("Trình duyệt chặn clipboard");
+        }
+      });
+
+      document.getElementById("reset")?.addEventListener("click", () => {
+        state.kinds.clear();
+        state.animate = false;
+        render();
+        showToast("Đã bỏ sửa tay");
+      });
     };
 
     form.addEventListener("submit", async (event) => {
@@ -1164,14 +1299,14 @@
         const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
-          return renderError(
-            data.error || `Server trả về HTTP ${response.status}.`,
-            data.detail
-          );
+          return renderError(data.error || `Server trả về HTTP ${response.status}.`, data.detail);
         }
 
-        lastOutput = data.output || "";
-        renderResult(data);
+        state.days = Array.isArray(data.days) ? data.days : [];
+        state.summary = data.summary || {};
+        state.kinds = new Map();
+        state.animate = true;
+        render();
       } catch (error) {
         renderError(error?.message || "Không gọi được API.", null);
       } finally {
