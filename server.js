@@ -61,7 +61,7 @@ const decodeJwtPayload = (jwt) => {
   }
 };
 
-const findStaffCode = (value) => {
+const findValueByKeys = (value, keys) => {
   if (value == null) {
     return null;
   }
@@ -70,7 +70,7 @@ const findStaffCode = (value) => {
     const jwtPayload = decodeJwtPayload(value);
 
     if (jwtPayload) {
-      return findStaffCode(jwtPayload);
+      return findValueByKeys(jwtPayload, keys);
     }
 
     return null;
@@ -78,10 +78,10 @@ const findStaffCode = (value) => {
 
   if (Array.isArray(value)) {
     for (const item of value) {
-      const staffCode = findStaffCode(item);
+      const found = findValueByKeys(item, keys);
 
-      if (staffCode) {
-        return staffCode;
+      if (found) {
+        return found;
       }
     }
 
@@ -92,15 +92,7 @@ const findStaffCode = (value) => {
     return null;
   }
 
-  const candidateKeys = [
-    "staff_code",
-    "staffCode",
-    "employee_code",
-    "employeeCode",
-    "code",
-  ];
-
-  for (const key of candidateKeys) {
+  for (const key of keys) {
     const candidate = value[key];
 
     if (typeof candidate === "string" || typeof candidate === "number") {
@@ -113,14 +105,29 @@ const findStaffCode = (value) => {
   }
 
   for (const nestedValue of Object.values(value)) {
-    const staffCode = findStaffCode(nestedValue);
+    const found = findValueByKeys(nestedValue, keys);
 
-    if (staffCode) {
-      return staffCode;
+    if (found) {
+      return found;
     }
   }
 
   return null;
+};
+
+const findStaffCode = (value) => {
+  const explicit = findValueByKeys(value, [
+    "staff_code",
+    "staffCode",
+    "employee_code",
+    "employeeCode",
+  ]);
+
+  if (explicit) {
+    return explicit;
+  }
+
+  return findValueByKeys(value?.data ?? value, ["code"]);
 };
 
 const fetchStaffCode = async (token) => {
@@ -241,6 +248,7 @@ app.post("/api/timesheet", async (req, res) => {
     let totalWorkedSeconds = 0;
     let validDaysCount = 0;
     const details = [];
+    const days = [];
 
     for (const row of rows) {
       if (row?.check_in == null || row?.check_out == null) {
@@ -273,6 +281,14 @@ app.post("/api/timesheet", async (req, res) => {
       details.push(
         `[${row.date}] Làm: ${formatTime(workedSeconds)} | Chênh lệch: ${status}`
       );
+
+      days.push({
+        date: row.date ?? null,
+        check_in: checkIn,
+        check_out: checkOut,
+        worked_seconds: workedSeconds,
+        diff_seconds: diffSeconds,
+      });
     }
 
     const totalTargetSeconds =
@@ -295,10 +311,12 @@ app.post("/api/timesheet", async (req, res) => {
 
     return res.json({
       output,
+      days,
       summary: {
         from_date: fromDate,
         to_date: toDate,
         valid_days: validDaysCount,
+        target_seconds_per_day: TARGET_SECONDS_PER_DAY,
         total_worked_seconds: totalWorkedSeconds,
         total_target_seconds: totalTargetSeconds,
         difference_seconds: diffTotalSeconds,

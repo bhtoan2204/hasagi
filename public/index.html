@@ -3,158 +3,1181 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tính giờ chấm công</title>
+  <meta name="color-scheme" content="dark" />
+  <title>Thẻ chấm công · Tính giờ làm</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
+    :root {
+      --ink: #14110f;
+      --ink-2: #1d1916;
+      --ink-3: #2a241f;
+      --paper: #f3ede2;
+      --paper-2: #e6dece;
+      --rule: #cbc0ac;
+      --graphite: #4a4137;
+      --muted: #8c8073;
+      --amber: #d9962b;
+      --amber-soft: #f0c477;
+      --jade: #3f9e6a;
+      --jade-ink: #1c6a43;
+      --vermilion: #d6543a;
+      --vermilion-ink: #a63a22;
+
+      --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --card-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset,
+                     0 18px 44px -18px rgba(0, 0, 0, .7),
+                     0 2px 0 rgba(0, 0, 0, .25);
+    }
+
     * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
     body {
       margin: 0;
-      padding: 32px 16px;
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      color: #1f2937;
+      min-height: 100vh;
+      padding: clamp(20px, 5vw, 64px) clamp(16px, 4vw, 40px) 72px;
+      font-family: var(--mono);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--paper);
+      background-color: var(--ink);
+      background-image:
+        radial-gradient(120% 90% at 8% -10%, rgba(217, 150, 43, .16), transparent 58%),
+        radial-gradient(90% 70% at 100% 0%, rgba(63, 158, 106, .09), transparent 60%),
+        repeating-linear-gradient(to right, rgba(243, 237, 226, .035) 0 1px, transparent 1px 48px),
+        repeating-linear-gradient(to bottom, rgba(243, 237, 226, .035) 0 1px, transparent 1px 48px);
+      background-attachment: fixed;
     }
-    main {
-      max-width: 900px;
+
+    /* grain overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 9;
+      pointer-events: none;
+      opacity: .05;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
       margin: 0 auto;
-      background: #fff;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
     }
-    h1 { margin-top: 0; }
+
+    /* ---------- header ---------- */
+
+    .masthead {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(243, 237, 226, .14);
+      animation: rise .7s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    .eyebrow span { color: var(--muted); }
+
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+      line-height: .96;
+      letter-spacing: -.02em;
+      font-variation-settings: "SOFT" 22, "WONK" 1, "opsz" 120;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--amber-soft);
+      font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 144;
+    }
+
+    .masthead-note {
+      max-width: 24ch;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* ---------- layout ---------- */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(290px, 360px) minmax(0, 1fr);
+      gap: clamp(22px, 3.4vw, 46px);
+      align-items: start;
+      margin-top: clamp(26px, 4vw, 48px);
+    }
+
+    /* ---------- punch card (form) ---------- */
+
+    .card {
+      position: relative;
+      padding: 30px 26px 26px;
+      border-radius: 3px;
+      color: var(--ink);
+      background: linear-gradient(178deg, var(--paper), var(--paper-2));
+      box-shadow: var(--card-shadow);
+      transform: rotate(-.5deg);
+      animation: rise .8s .08s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 15px;
+      background-image: radial-gradient(circle at 8px 7px, var(--ink) 0 3.1px, transparent 3.6px);
+      background-size: 23px 15px;
+      opacity: .16;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      left: 13px;
+      top: 26px;
+      bottom: 18px;
+      width: 1px;
+      background: repeating-linear-gradient(to bottom, var(--vermilion) 0 4px, transparent 4px 9px);
+      opacity: .3;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .card-title {
+      font-family: var(--display);
+      font-size: 1.28rem;
+      font-weight: 500;
+      font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
+    }
+
+    .card-serial {
+      font-size: 10.5px;
+      letter-spacing: .18em;
+      color: var(--graphite);
+      opacity: .7;
+    }
+
+    .field { margin-bottom: 20px; }
+
     label {
       display: block;
-      margin: 14px 0 6px;
-      font-weight: 700;
+      margin-bottom: 7px;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+      color: var(--graphite);
     }
-    input, select, button {
+
+    .control {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input,
+    select {
       width: 100%;
-      padding: 11px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      padding: 9px 2px;
+      font-family: var(--mono);
       font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      border-bottom: 1.5px solid var(--rule);
+      border-radius: 0;
+      transition: border-color .2s ease, background-color .2s ease;
     }
-    .row {
+
+    input::placeholder { color: #a99c8b; font-weight: 400; }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-bottom-color: var(--amber);
+      background: rgba(217, 150, 43, .09);
+    }
+
+    input:focus-visible,
+    select:focus-visible { outline: none; }
+
+    #token { padding-right: 46px; letter-spacing: .05em; }
+
+    select {
+      appearance: none;
+      padding-right: 26px;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%234a4137' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+    }
+
+    /* keep the arrow visible when :focus paints a background */
+    select:focus {
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%234a4137' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"),
+        linear-gradient(rgba(217, 150, 43, .09), rgba(217, 150, 43, .09));
+    }
+
+    .peek {
+      position: absolute;
+      right: 0;
+      padding: 6px 4px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      color: var(--graphite);
+      background: none;
+      border: 0;
+      border-bottom: 1.5px solid transparent;
+      cursor: pointer;
+      transition: color .18s ease;
+    }
+
+    .peek:hover { color: var(--vermilion-ink); }
+
+    .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
     }
-    button {
-      margin-top: 18px;
+
+    .hint {
+      display: flex;
+      gap: 8px;
+      margin: -8px 0 22px;
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: var(--graphite);
+      opacity: .78;
+    }
+
+    .hint::before { content: "▚"; color: var(--amber); }
+
+    .stamp {
+      width: 100%;
+      margin-top: 4px;
+      padding: 14px 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--paper);
+      background: var(--ink);
       border: 0;
+      border-radius: 2px;
       cursor: pointer;
-      background: #111827;
-      color: white;
-      font-weight: 700;
+      box-shadow: 4px 4px 0 rgba(20, 17, 15, .22);
+      transition: transform .14s ease, box-shadow .14s ease, background-color .2s ease;
     }
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
+
+    .stamp:hover:not(:disabled) {
+      background: var(--ink-3);
+      transform: translate(-1px, -1px);
+      box-shadow: 6px 6px 0 rgba(20, 17, 15, .26);
     }
-    pre {
-      margin-top: 22px;
-      padding: 16px;
-      min-height: 120px;
-      overflow: auto;
-      white-space: pre-wrap;
-      background: #0f172a;
-      color: #e2e8f0;
-      border-radius: 8px;
-      line-height: 1.55;
+
+    .stamp:active:not(:disabled) {
+      transform: translate(3px, 3px);
+      box-shadow: 0 0 0 rgba(20, 17, 15, .2);
     }
-    .note {
+
+    .stamp:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+    .stamp:disabled { cursor: progress; opacity: .55; }
+
+    /* ---------- results ---------- */
+
+    .results { animation: rise .8s .16s cubic-bezier(.2, .8, .2, 1) both; }
+
+    .panel {
+      position: relative;
+      padding: clamp(22px, 3vw, 34px);
+      background: linear-gradient(170deg, rgba(243, 237, 226, .055), rgba(243, 237, 226, .02));
+      border: 1px solid rgba(243, 237, 226, .13);
+      border-radius: 4px;
+      backdrop-filter: blur(2px);
+    }
+
+    .panel + .panel { margin-top: 18px; }
+
+    .placeholder {
+      display: grid;
+      place-items: center;
+      gap: 14px;
+      min-height: 340px;
+      text-align: center;
+      border-style: dashed;
+      border-color: rgba(243, 237, 226, .16);
+    }
+
+    .placeholder-mark {
+      font-family: var(--display);
+      font-size: clamp(3.4rem, 9vw, 5.6rem);
+      line-height: 1;
+      color: rgba(243, 237, 226, .16);
+      font-variation-settings: "SOFT" 40, "WONK" 1, "opsz" 144;
+    }
+
+    .placeholder p {
+      max-width: 34ch;
+      margin: 0;
       font-size: 13px;
-      color: #64748b;
+      color: var(--muted);
     }
+
+    .loading .placeholder-mark {
+      color: var(--amber);
+      animation: tick 1.1s steps(1) infinite;
+    }
+
+    /* hero */
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .range {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .chip {
+      padding: 5px 11px;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      color: var(--amber);
+      border: 1px solid rgba(217, 150, 43, .5);
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(217, 150, 43, .14) inset;
+      transform: rotate(-1.4deg);
+    }
+
+    .verdict {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+    }
+
+    .verdict-word {
+      font-family: var(--display);
+      font-size: clamp(1rem, 2.4vw, 1.3rem);
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-variation-settings: "SOFT" 30, "WONK" 1, "opsz" 40;
+    }
+
+    .verdict-value {
+      font-family: var(--display);
+      font-size: clamp(2.5rem, 7.6vw, 4.7rem);
+      font-weight: 500;
+      line-height: .94;
+      letter-spacing: -.03em;
+      font-variant-numeric: tabular-nums;
+      font-variation-settings: "SOFT" 12, "WONK" 1, "opsz" 144;
+    }
+
+    .verdict-value small {
+      font-size: .34em;
+      font-weight: 400;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+
+    .is-surplus .verdict-value,
+    .is-surplus .verdict-word { color: var(--jade); }
+
+    .is-deficit .verdict-value,
+    .is-deficit .verdict-word { color: var(--vermilion); }
+
+    /* balance meter */
+
+    .meter {
+      position: relative;
+      height: 12px;
+      margin-top: 26px;
+      background: rgba(243, 237, 226, .08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 2px;
+      background-image: repeating-linear-gradient(
+        115deg,
+        currentColor 0 6px,
+        rgba(20, 17, 15, .28) 6px 9px
+      );
+      transition: width .9s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .is-surplus .meter-fill { color: var(--jade); }
+    .is-deficit .meter-fill { color: var(--vermilion); }
+
+    .meter-mark {
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      width: 2px;
+      background: var(--paper);
+      box-shadow: 0 0 0 1px rgba(20, 17, 15, .5);
+    }
+
+    .meter-legend {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 9px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* stat tiles */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 1px;
+      margin-top: 28px;
+      background: rgba(243, 237, 226, .13);
+      border: 1px solid rgba(243, 237, 226, .13);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 15px 16px;
+      background: var(--ink-2);
+    }
+
+    .stat dt {
+      margin: 0 0 8px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stat dd {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.01em;
+    }
+
+    /* ledger */
+
+    .panel-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-family: var(--display);
+      font-size: 1.12rem;
+      font-weight: 500;
+      font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
+    }
+
+    .count {
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+    }
+
+    thead th {
+      padding: 0 12px 9px 0;
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+      text-align: left;
+      white-space: nowrap;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(243, 237, 226, .16);
+    }
+
+    thead th.num, tbody td.num { text-align: right; padding-right: 0; }
+
+    tbody tr {
+      border-bottom: 1px dotted rgba(243, 237, 226, .11);
+      animation: rise .5s cubic-bezier(.2, .8, .2, 1) both;
+      animation-delay: calc(var(--i) * 26ms);
+    }
+
+    tbody tr:nth-child(even) { background: rgba(243, 237, 226, .022); }
+    tbody tr:hover { background: rgba(217, 150, 43, .07); }
+
+    tbody td {
+      padding: 11px 12px 11px 0;
+      font-size: 13.5px;
+      white-space: nowrap;
+    }
+
+    .day { font-weight: 500; }
+
+    .dow {
+      margin-left: 7px;
+      font-size: 10.5px;
+      letter-spacing: .1em;
+      color: var(--muted);
+    }
+
+    .is-weekend .dow { color: var(--amber); }
+
+    .clock { color: var(--muted); font-size: 12.5px; }
+    .clock b { font-weight: 500; color: var(--paper); }
+
+    .bar-cell { width: 34%; min-width: 110px; padding-right: 14px !important; }
+
+    .bar {
+      position: relative;
+      height: 7px;
+      background: rgba(243, 237, 226, .075);
+      border-radius: 1px;
+    }
+
+    .bar i {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      border-radius: 1px;
+      background: currentColor;
+      transition: width .8s cubic-bezier(.2, .8, .2, 1);
+      transition-delay: calc(var(--i) * 26ms + 120ms);
+    }
+
+    .bar u {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      width: 1px;
+      background: rgba(243, 237, 226, .5);
+    }
+
+    tr.over .bar { color: var(--jade); }
+    tr.under .bar { color: var(--vermilion); }
+
+    .delta { font-weight: 500; }
+    tr.over .delta { color: var(--jade); }
+    tr.under .delta { color: var(--vermilion); }
+
+    /* footer strip */
+
+    .strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .ghost {
+      padding: 8px 13px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--paper);
+      background: transparent;
+      border: 1px solid rgba(243, 237, 226, .22);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color .2s ease, color .2s ease, background-color .2s ease;
+    }
+
+    .ghost:hover { color: var(--amber); border-color: var(--amber); background: rgba(217, 150, 43, .08); }
+    .ghost:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+    details { margin-top: 16px; }
+
+    summary {
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    summary:hover { color: var(--amber); }
+
+    pre {
+      margin: 12px 0 0;
+      padding: 16px;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      color: var(--paper);
+      background: rgba(20, 17, 15, .55);
+      border: 1px solid rgba(243, 237, 226, .1);
+      border-radius: 3px;
+    }
+
+    /* error */
+
+    .error {
+      border-color: rgba(214, 84, 58, .45);
+      border-left: 3px solid var(--vermilion);
+    }
+
+    .error-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 10px;
+      font-family: var(--display);
+      font-size: 1.14rem;
+      font-weight: 500;
+      color: var(--vermilion);
+      font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
+    }
+
+    .error-body { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--paper); }
+
+    /* skeleton */
+
+    .skeleton { display: grid; gap: 10px; margin-top: 4px; }
+
+    .skeleton i {
+      display: block;
+      height: 13px;
+      border-radius: 2px;
+      background: linear-gradient(
+        90deg,
+        rgba(243, 237, 226, .05) 0%,
+        rgba(243, 237, 226, .14) 48%,
+        rgba(243, 237, 226, .05) 100%
+      );
+      background-size: 220% 100%;
+      animation: sweep 1.3s linear infinite;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      z-index: 20;
+      padding: 11px 18px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--amber-soft);
+      border-radius: 2px;
+      box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .8);
+      transform: translate(-50%, 22px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .28s cubic-bezier(.2, .8, .2, 1), opacity .28s ease;
+    }
+
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+    .sr {
+      position: absolute;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes tick {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: .25; }
+    }
+
+    @keyframes sweep {
+      from { background-position: 120% 0; }
+      to { background-position: -120% 0; }
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .card { transform: none; }
+      .masthead-note { text-align: left; max-width: 46ch; }
+    }
+
     @media (max-width: 600px) {
-      .row { grid-template-columns: 1fr; }
+      body { font-size: 14px; }
+      .bar-cell, thead th.bar-col { display: none; }
+      .clock { display: none; }
+      thead th.clock-col { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: .001ms !important;
+      }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Tính giờ chấm công</h1>
-
-    <form id="form">
-      <label for="token">Access token</label>
-      <input
-        id="token"
-        type="password"
-        autocomplete="off"
-        placeholder="Dán token hoặc Bearer token"
-        required
-      />
-      <div class="note">Token không được lưu trên trình duyệt hoặc server.</div>
-
-      <div class="row">
-        <div>
-          <label for="month">Tháng</label>
-          <select id="month" required></select>
-        </div>
-        <div>
-          <label for="year">Năm</label>
-          <input id="year" type="number" min="2000" max="2100" required />
-        </div>
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">Hasaki <span>/</span> Bảng công <span>/</span> 9 giờ mỗi ngày</p>
+        <h1>Thẻ chấm <em>công</em></h1>
       </div>
+      <p class="masthead-note">
+        Đối chiếu giờ check-in / check-out với định mức 9 giờ, tính phần dư và phần thiếu của cả tháng.
+      </p>
+    </header>
 
-      <button id="submit" type="submit">Tính chấm công</button>
-    </form>
+    <div class="layout">
+      <form class="card" id="form" novalidate>
+        <div class="card-head">
+          <span class="card-title">Phiếu tra cứu</span>
+          <span class="card-serial">№ 04</span>
+        </div>
 
-    <pre id="output">Nhập token, tháng và năm để xem kết quả.</pre>
-  </main>
+        <div class="field">
+          <label for="token">Access token</label>
+          <div class="control">
+            <input
+              id="token"
+              name="token"
+              type="password"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Dán token hoặc Bearer token"
+              required
+            />
+            <button class="peek" id="peek" type="button" aria-pressed="false">Hiện</button>
+          </div>
+        </div>
+
+        <p class="hint">Token chỉ đi qua request này, không lưu ở trình duyệt hay server.</p>
+
+        <div class="field grid-2">
+          <div>
+            <label for="month">Tháng</label>
+            <select id="month" name="month" required></select>
+          </div>
+          <div>
+            <label for="year">Năm</label>
+            <input id="year" name="year" type="number" min="2000" max="2100" inputmode="numeric" required />
+          </div>
+        </div>
+
+        <button class="stamp" id="submit" type="submit">Đóng dấu tính giờ</button>
+      </form>
+
+      <section class="results" id="results" aria-live="polite" aria-busy="false">
+        <div class="panel placeholder">
+          <div class="placeholder-mark">⌛</div>
+          <p>Nhập token, chọn tháng và năm để dựng bảng công.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
 
   <script>
     const form = document.getElementById("form");
     const tokenInput = document.getElementById("token");
+    const peekButton = document.getElementById("peek");
     const monthInput = document.getElementById("month");
     const yearInput = document.getElementById("year");
-    const output = document.getElementById("output");
     const submitButton = document.getElementById("submit");
+    const results = document.getElementById("results");
+    const toast = document.getElementById("toast");
 
+    const DOW = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
     const now = new Date();
+
+    let lastOutput = "";
+    let toastTimer;
 
     for (let month = 1; month <= 12; month++) {
       const option = document.createElement("option");
       option.value = String(month);
-      option.textContent = `Tháng ${month}`;
+      option.textContent = `Tháng ${String(month).padStart(2, "0")}`;
       option.selected = month === now.getMonth() + 1;
       monthInput.appendChild(option);
     }
 
     yearInput.value = String(now.getFullYear());
 
+    peekButton.addEventListener("click", () => {
+      const shown = tokenInput.type === "text";
+      tokenInput.type = shown ? "password" : "text";
+      peekButton.textContent = shown ? "Hiện" : "Ẩn";
+      peekButton.setAttribute("aria-pressed", String(!shown));
+    });
+
+    const pad2 = (value) => String(value).padStart(2, "0");
+
+    const escapeHtml = (value) =>
+      String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+      })[char]);
+
+    const compact = (seconds) => {
+      const total = Math.abs(Math.trunc(seconds));
+      return `${Math.floor(total / 3600)}h ${pad2(Math.floor((total % 3600) / 60))}m`;
+    };
+
+    const longForm = (seconds) => {
+      const total = Math.abs(Math.trunc(seconds));
+      const hours = Math.floor(total / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      return `${hours} giờ ${pad2(minutes)} phút`;
+    };
+
+    const signed = (seconds, formatter = compact) =>
+      `${seconds < 0 ? "−" : "+"}${formatter(seconds)}`;
+
+    // check_in/check_out có thể là epoch giây hoặc giây tính từ nửa đêm.
+    const clockOf = (value) => {
+      if (!Number.isFinite(value)) return null;
+
+      if (value > 1e9) {
+        const parts = new Intl.DateTimeFormat("vi-VN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone: "Asia/Ho_Chi_Minh",
+        }).format(new Date(value * 1000));
+        return parts;
+      }
+
+      if (value >= 0 && value < 172800) {
+        return `${pad2(Math.floor(value / 3600) % 24)}:${pad2(Math.floor((value % 3600) / 60))}`;
+      }
+
+      return null;
+    };
+
+    const dayLabel = (date) => {
+      const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(date || ""));
+      if (!match) return { label: date ? String(date) : "—", dow: "", weekend: false };
+
+      const [, year, month, day] = match;
+      const index = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))).getUTCDay();
+
+      return {
+        label: `${day}/${month}`,
+        dow: DOW[index],
+        weekend: index === 0 || index === 6,
+      };
+    };
+
+    const countUp = (element, seconds, formatter) => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const render = (value) => {
+        element.textContent = signed(value, formatter);
+      };
+
+      if (reduced) return render(seconds);
+
+      const duration = 720;
+      const start = performance.now();
+
+      const frame = (stamp) => {
+        const progress = Math.min((stamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        render(seconds * eased);
+        if (progress < 1) requestAnimationFrame(frame);
+        else render(seconds);
+      };
+
+      requestAnimationFrame(frame);
+    };
+
+    const showToast = (message) => {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    };
+
+    const renderLoading = () => {
+      results.innerHTML = `
+        <div class="panel placeholder loading">
+          <div class="placeholder-mark">⌛</div>
+          <p>Đang đối chiếu dữ liệu chấm công…</p>
+          <div class="skeleton" style="width:min(420px,80%)">
+            <i></i><i style="animation-delay:.15s"></i><i style="animation-delay:.3s"></i>
+          </div>
+        </div>`;
+    };
+
+    const renderError = (message, detail) => {
+      results.innerHTML = `
+        <div class="panel error">
+          <p class="error-title">✕ Không tính được</p>
+          <p class="error-body">${escapeHtml(message)}</p>
+          ${detail ? `<pre>${escapeHtml(detail)}</pre>` : ""}
+        </div>`;
+    };
+
+    const renderEmpty = (summary) => {
+      results.innerHTML = `
+        <div class="panel placeholder">
+          <div class="placeholder-mark">∅</div>
+          <p>Không có ngày nào đủ cả check-in và check-out trong khoảng
+          ${escapeHtml(summary.from_date)} → ${escapeHtml(summary.to_date)}.</p>
+        </div>`;
+    };
+
+    const renderResult = (data) => {
+      const summary = data.summary || {};
+      const days = Array.isArray(data.days) ? data.days : [];
+
+      if (!days.length) return renderEmpty(summary);
+
+      const target = Number(summary.target_seconds_per_day) || 9 * 3600;
+      const diff = Number(summary.difference_seconds) || 0;
+      const worked = Number(summary.total_worked_seconds) || 0;
+      const totalTarget = Number(summary.total_target_seconds) || 0;
+      const surplus = diff >= 0;
+
+      const scale = Math.max(target * 1.45, ...days.map((day) => day.worked_seconds || 0));
+      const markPercent = (target / scale) * 100;
+      const meterPercent = Math.max(2, Math.min(100, (worked / (totalTarget || worked || 1)) * 100));
+      const average = worked / days.length;
+
+      const rows = days.map((day, index) => {
+        const { label, dow, weekend } = dayLabel(day.date);
+        const dayDiff = Number(day.diff_seconds) || 0;
+        const dayWorked = Number(day.worked_seconds) || 0;
+        const from = clockOf(Number(day.check_in));
+        const to = clockOf(Number(day.check_out));
+
+        return `
+          <tr class="${dayDiff >= 0 ? "over" : "under"} ${weekend ? "is-weekend" : ""}" style="--i:${index}">
+            <td class="day">${escapeHtml(label)}<span class="dow">${escapeHtml(dow)}</span></td>
+            <td class="clock">${
+              from && to ? `<b>${from}</b> → <b>${to}</b>` : "—"
+            }</td>
+            <td class="num">${compact(dayWorked)}</td>
+            <td class="bar-cell">
+              <div class="bar">
+                <i style="--i:${index}" data-width="${Math.min(100, (dayWorked / scale) * 100)}"></i>
+                <u style="left:${markPercent}%"></u>
+              </div>
+            </td>
+            <td class="num delta">${signed(dayDiff)}</td>
+          </tr>`;
+      }).join("");
+
+      results.innerHTML = `
+        <div class="panel ${surplus ? "is-surplus" : "is-deficit"}">
+          <div class="hero-top">
+            <span class="range">${escapeHtml(summary.from_date || "")} → ${escapeHtml(summary.to_date || "")}</span>
+            ${summary.staff_code ? `<span class="chip">Mã NV ${escapeHtml(summary.staff_code)}</span>` : ""}
+          </div>
+
+          <div class="verdict">
+            <span class="verdict-word">${surplus ? "Đang dư" : "Đang thiếu"}</span>
+            <span class="verdict-value" id="hero">${signed(diff, longForm)}</span>
+            <small class="verdict-value" style="font-size:.34em">${surplus ? "🎉" : "⚠️"}</small>
+          </div>
+
+          <div class="meter">
+            <div class="meter-fill" id="meter"></div>
+            <span class="meter-mark" style="left:${Math.min(100, (totalTarget / Math.max(worked, totalTarget, 1)) * 100)}%"></span>
+          </div>
+          <div class="meter-legend">
+            <span>Thực tế ${longForm(worked)}</span>
+            <span>Chuẩn ${longForm(totalTarget)}</span>
+          </div>
+
+          <dl class="stats">
+            <div class="stat"><dt>Ngày tính</dt><dd>${days.length}</dd></div>
+            <div class="stat"><dt>Giờ chuẩn</dt><dd>${compact(totalTarget)}</dd></div>
+            <div class="stat"><dt>Thực tế</dt><dd>${compact(worked)}</dd></div>
+            <div class="stat"><dt>TB / ngày</dt><dd>${compact(average)}</dd></div>
+          </dl>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Sổ chi tiết</span>
+            <span class="count">${days.length} ngày · định mức ${compact(target)}</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Ngày</th>
+                  <th scope="col" class="clock-col">Vào → Ra</th>
+                  <th scope="col" class="num">Làm</th>
+                  <th scope="col" class="bar-col">So với ${compact(target)}</th>
+                  <th scope="col" class="num">Chênh</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+
+          <div class="strip">
+            <span>Cột mốc trắng trên thanh là định mức ${compact(target)} mỗi ngày.</span>
+            <button class="ghost" id="copy" type="button">Copy bản text</button>
+          </div>
+
+          <details>
+            <summary>Xem bản text gốc</summary>
+            <pre>${escapeHtml(data.output || "")}</pre>
+          </details>
+        </div>`;
+
+      const hero = document.getElementById("hero");
+      if (hero) countUp(hero, diff, longForm);
+
+      requestAnimationFrame(() => {
+        const meter = document.getElementById("meter");
+        if (meter) meter.style.width = `${meterPercent}%`;
+
+        results.querySelectorAll(".bar i").forEach((bar) => {
+          bar.style.width = `${bar.dataset.width}%`;
+        });
+      });
+
+      const copyButton = document.getElementById("copy");
+      if (copyButton) {
+        copyButton.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(lastOutput);
+            showToast("Đã copy");
+          } catch {
+            showToast("Trình duyệt chặn clipboard");
+          }
+        });
+      }
+    };
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      const token = tokenInput.value.trim();
+
+      if (!token) {
+        tokenInput.focus();
+        return showToast("Chưa có token");
+      }
+
       submitButton.disabled = true;
-      output.textContent = "Đang tải dữ liệu...";
+      submitButton.textContent = "Đang tính…";
+      results.setAttribute("aria-busy", "true");
+      renderLoading();
 
       try {
         const response = await fetch("/api/timesheet", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            token: tokenInput.value,
+            token,
             month: Number(monthInput.value),
-            year: Number(yearInput.value)
-          })
+            year: Number(yearInput.value),
+          }),
         });
 
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
-          throw new Error(
-            [data.error, data.detail].filter(Boolean).join("\n")
+          return renderError(
+            data.error || `Server trả về HTTP ${response.status}.`,
+            data.detail
           );
         }
 
-        output.textContent = data.output;
+        lastOutput = data.output || "";
+        renderResult(data);
       } catch (error) {
-        output.textContent = `Lỗi: ${error.message}`;
+        renderError(error?.message || "Không gọi được API.", null);
       } finally {
         submitButton.disabled = false;
+        submitButton.textContent = "Đóng dấu tính giờ";
+        results.setAttribute("aria-busy", "false");
       }
     });
   </script>
