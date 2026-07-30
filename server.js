@@ -532,11 +532,8 @@ app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-// Chỉ mở port khi chạy trực tiếp, để file này import được vào test.
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  app.listen(PORT, "127.0.0.1", () => {
-    console.log(`Timesheet app listening on port ${PORT}`);
-  });
-}
+app.listen(PORT, "127.0.0.1", () => {
+  console.log(`Timesheet app listening on port ${PORT}`);
+});
 
 export { classifyDay, resolveDay, fetchProfile, findStaffCode, resolveAvatar };
